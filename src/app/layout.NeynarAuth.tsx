@@ -1,29 +1,13 @@
-import type { Metadata } from 'next';
+// src/app/layout.NeynarAuth.tsx
+// Temporary dummy to avoid TypeScript / build errors.
+// Not actually used by the app right now.
 
-import { getSession } from '~/auth';
-import '~/app/globals.css';
-import { Providers } from '~/app/providers';
-import { APP_NAME, APP_DESCRIPTION } from '~/lib/constants';
+import type { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: APP_NAME,
-  description: APP_DESCRIPTION,
-};
-
-export default async function RootLayout({
+export default function NeynarAuthLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const session = await getSession();
-
-  return (
-    <html lang="en">
-      <body>
-        <Providers session={session}>
-          {children}
-        </Providers>
-      </body>
-    </html>
-  );
+}: {
+  children: ReactNode;
+}) {
+  return <>{children}</>;
 }
