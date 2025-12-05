@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Farcaster Analytics",
@@ -13,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* 🔹 Wrap all pages in Suspense so useSearchParams is happy */}
+        <Suspense fallback={<div>Loading analytics…</div>}>
+          {children}
+        </Suspense>
+      </body>
     </html>
   );
 }
