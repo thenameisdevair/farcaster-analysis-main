@@ -2,6 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useNeynarUser } from "~/hooks/useNeynarUser";
+
+import { MiniAppReady } from "@/components/MiniAppReady";
+
+export default function Home() {
+  return (
+    <>
+      <MiniAppReady />
+      {/* the rest of your existing analytics UI */}
+      {/* ... */}
+    </>
+  );
+}
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
@@ -65,10 +78,36 @@ type ActivityResponse = {
 type Tab = "overview" | "audience" | "content" | "video";
 type ActivityMetric = "postCount" | "engagements";
 
+const DEFAULT_FID = process.env.NEXT_PUBLIC_DEFAULT_FID || "774643";
+
 export default function HomePage() {
   const searchParams = useSearchParams();
-  const fidFromUrl = searchParams.get("fid");
-  const fid = fidFromUrl && fidFromUrl.trim().length > 0 ? fidFromUrl : "774643";
+
+  // 1) Read from mini-app context (when running inside Warpcast / Farcaster)
+  const { user } = useNeynarUser();  // or useNeynarContext / whatever your hook is
+  const fidFromMiniApp =
+    user && typeof user.fid === "number"
+      ? String(user.fid)
+      : user && typeof user.fid === "string"
+      ? user.fid
+      : null;
+
+  // 2) Read from URL (?fid=) when testing in the browser
+  const fidFromQuery = searchParams.get("fid");
+
+  // 3) Final FID priority:
+  //    mini-app context > query param > default env
+  const fid =
+    (fidFromMiniApp && fidFromMiniApp.trim()) ||
+    (fidFromQuery && fidFromQuery.trim()) ||
+    DEFAULT_FID;
+
+  // ✅ Now pass `fid` everywhere:
+  // - http://YOUR_BACKEND/api/live/summary?fid=${fid}
+  // - http://YOUR_BACKEND/api/live/top-posts?fid=${fid}
+  // - http://YOUR_BACKEND/api/live/activity?fid=${fid}
+}
+
 
   const [tab, setTab] = useState<Tab>("overview");
 

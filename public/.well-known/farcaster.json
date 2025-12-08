@@ -1,0 +1,19 @@
+{
+  "name": "Farcaster Analytics",
+  "description": "Mini app that shows real-time analytics for your Farcaster profile.",
+  "url": "https://farcaster-analysis-main-s6xa.vercel.app/", 
+  "icon_url": "https://img.sanishtech.com/u/2dee3eff32b2496fb92f0e6bc8ed07e8.png",
+  "nav": {
+    "initial_path": "/"
+  },
+  "permissions": {
+    "user": {
+      "profile": true,
+      "casts": true
+    },
+    "wallet": {
+      "sign": false,
+      "send_transaction": false
+    }
+  }
+}
